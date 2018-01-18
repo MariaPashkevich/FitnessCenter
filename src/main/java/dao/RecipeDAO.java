@@ -2,7 +2,9 @@ package dao;
 
 import entity.Recipe;
 
-public interface RecipeDAO extends DAO<RecipeDAO>{
+import java.sql.SQLException;
 
-    Recipe findByName(String name);
+public interface RecipeDAO extends DAO<Recipe>{
+
+    Recipe findByName(String name) throws SQLException;
 }
