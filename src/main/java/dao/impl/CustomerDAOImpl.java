@@ -1,10 +1,10 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.CustomerDAO;
 import entity.Customer;
 
-import java.beans.*;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.sql.*;
 import java.sql.Statement;
@@ -24,7 +24,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_CUSTOMER, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, customer.getUserId());
             statement.setString(2, customer.getFirstName());
@@ -42,13 +42,13 @@ public class CustomerDAOImpl implements CustomerDAO {
                 customer.setCustomerId(resultSet.getInt(1));
             }
             resultSet.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
-        } finally {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
             connection.close();
         }
         return customer;
@@ -59,7 +59,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_CUSTOMER);
             statement.setInt(1, id);
             statement.executeQuery();
@@ -68,11 +68,11 @@ public class CustomerDAOImpl implements CustomerDAO {
                customer = customerFromResultSet(resultSet);
             }
             resultSet.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             connection.close();
@@ -80,11 +80,11 @@ public class CustomerDAOImpl implements CustomerDAO {
         return customer;
     }
 
-    public void update(Customer customer) {
+    public void update(Customer customer) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_CUSTOMER);
             statement.setInt(1, customer.getUserId());
             statement.setString(2, customer.getPhoneNumber());
@@ -92,31 +92,34 @@ public class CustomerDAOImpl implements CustomerDAO {
             statement.setInt(4, customer.getDiscount());
             statement.setInt(5, customer.getUserId());
             statement.executeUpdate();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
         }
 
     }
 
-    public void delete(int id) {
+    public void delete(int id) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_CUSTOMER);
             statement.setInt(1, id);
             statement.executeQuery();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            connection.close();
         }
     }
 
@@ -125,22 +128,23 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection connection = null;
         Statement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_CUSTOMERS);
             while (resultSet.next()){
                 customerList.add(customerFromResultSet(resultSet));
             }
             resultSet.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             connection.close();
         }
+
         return customerList;
     }
 
@@ -149,7 +153,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_BY_GENDER);
             statement.setBoolean(1, gender);
             ResultSet resultSet = statement.executeQuery();
@@ -157,11 +161,11 @@ public class CustomerDAOImpl implements CustomerDAO {
                 customerList.add(customerFromResultSet(resultSet));
             }
             resultSet.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             connection.close();
@@ -172,6 +176,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     private Customer customerFromResultSet(ResultSet resultSet) throws SQLException {
         Customer customer = new Customer();
         customer.setCustomerId(resultSet.getInt("CUSTOMER_ID"));
+        customer.setUserId(resultSet.getInt("USER_ID"));
         customer.setFirstName(resultSet.getString("FIRST_NAME"));
         customer.setLastName(resultSet.getString("LAST_NAME"));
         customer.setDateOfBirth(resultSet.getDate("DOB"));

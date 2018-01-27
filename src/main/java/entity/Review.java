@@ -69,4 +69,14 @@ public class Review {
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                ", customerId=" + customerId +
+                ", trainerId=" + trainerId +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

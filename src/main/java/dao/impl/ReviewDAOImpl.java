@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.ReviewDAO;
 import entity.Review;
 
@@ -17,7 +17,7 @@ public class ReviewDAOImpl implements ReviewDAO {
     private static final String FIND_ALL_REVIEWS_BY_TRAINER_ID = "SELECT REVIEW_ID, CUSTOMER_ID, TRAINER_ID, `COMMENT` FROM REVIEW WHERE TRAINER_ID=?";
     private static final String CREATE_REVIEW = "INSERT INTO `REVIEW` (`CUSTOMER_ID`, `TRAINER_ID`, `COMMENT`) VALUES (?, ?, ?)";
     private static final String READ_REVIEW = "SELECT REVIEW_ID, CUSTOMER_ID, TRAINER_ID, `COMMENT` FROM REVIEW WHERE REVIEW_ID=?";
-    private static final String UPDATE_REVIEW = "UPDATE REVIEW SET `COMMENT`=? WHERE REVIEW_ID=?";
+    private static final String UPDATE_REVIEW = "ConnectionPool";
     private static final String DELETE_REVIEW = "DELETE FROM REVIEW WHERE REVIEW_ID=?";
 
 
@@ -25,7 +25,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_REVIEW, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, review.getCustomerId());
             statement.setInt(2, review.getTrainerId());
@@ -51,7 +51,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_REVIEW);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -73,7 +73,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_REVIEW);
             statement.setString(1, review.getComment());
             statement.setInt(2, review.getReviewId());
@@ -91,7 +91,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_REVIEW);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -110,7 +110,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_REVIEWS);
             while(resultSet.next()){
@@ -132,7 +132,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_ALL_REVIEWS_BY_CUSTOMER_ID);
             statement.setInt(1, customerId);
             ResultSet resultSet = statement.executeQuery();
@@ -157,7 +157,7 @@ public class ReviewDAOImpl implements ReviewDAO {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_ALL_REVIEWS_BY_TRAINER_ID);
             statement.setInt(1, trainerId);
             ResultSet resultSet = statement.executeQuery();

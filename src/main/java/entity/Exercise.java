@@ -75,4 +75,14 @@ public class Exercise {
         result = 31 * result + (link != null ? link.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "exerciseId=" + exerciseId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", link='" + link + '\'' +
+                '}';
+    }
 }

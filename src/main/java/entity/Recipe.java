@@ -69,4 +69,14 @@ public class Recipe {
         result = 31 * result + (link != null ? link.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "recipeId=" + recipeId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", link='" + link + '\'' +
+                '}';
+    }
 }

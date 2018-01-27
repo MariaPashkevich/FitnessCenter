@@ -20,6 +20,17 @@ public class Meal {
         this.mealDate = mealDate;
     }
 
+    public Meal(int customerId, int recipeId, char type) {
+        this.customerId = customerId;
+        this.recipeId = recipeId;
+        this.type = type;
+    }
+
+    public Meal(int mealId, int recipeId){
+        this.mealId = mealId;
+        this.recipeId = recipeId;
+    }
+
     public long getMealId() {
         return mealId;
     }
@@ -82,5 +93,16 @@ public class Meal {
         result = 31 * result + (int) type;
         result = 31 * result + (mealDate != null ? mealDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "mealId=" + mealId +
+                ", customerId=" + customerId +
+                ", recipeId=" + recipeId +
+                ", type=" + type +
+                ", mealDate=" + mealDate +
+                '}';
     }
 }

@@ -152,4 +152,20 @@ public class Customer {
         result = 31 * result + discount;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", gender=" + gender +
+                ", information='" + information + '\'' +
+                ", discount=" + discount +
+                '}';
+    }
 }

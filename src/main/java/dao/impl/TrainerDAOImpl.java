@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.TrainerDAO;
 import entity.Trainer;
 
@@ -22,7 +22,7 @@ public class TrainerDAOImpl implements TrainerDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_TRAINER, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, trainer.getUserId());
             statement.setString(2, trainer.getFisrtName());
@@ -38,6 +38,8 @@ public class TrainerDAOImpl implements TrainerDAO{
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            connection.close();
         }
         return trainer;
     }
@@ -47,7 +49,7 @@ public class TrainerDAOImpl implements TrainerDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_TRAINER);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -69,7 +71,7 @@ public class TrainerDAOImpl implements TrainerDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_TRAINER);
             statement.setString(1, trainer.getSpecialization());
             statement.setInt(2, trainer.getTrainerId());
@@ -87,7 +89,7 @@ public class TrainerDAOImpl implements TrainerDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_TRAINER);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -105,7 +107,7 @@ public class TrainerDAOImpl implements TrainerDAO{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_TRAINERS);
             while(resultSet.next()){

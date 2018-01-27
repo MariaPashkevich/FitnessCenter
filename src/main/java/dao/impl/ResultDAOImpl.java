@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.ResultDAO;
 import entity.Result;
 
@@ -16,7 +16,7 @@ public class ResultDAOImpl implements ResultDAO{
     private static final String FIND_RESULT_BY_USER_ID = "SELECT RESULT_ID, CUSTOMER_ID, WEIGHT, WAIST, THIGH, CHEST, HEIGHT, MEASUREMENT_DATE FROM RESULTS WHERE CUSTOMER_ID=?";
     private static final String CREATE_RESULT = "INSERT INTO `RESULTS` (`CUSTOMER_ID`, `WEIGHT`, `WAIST`, `THIGH`, `CHEST`, `HEIGHT`, `MEASUREMENT_DATE`) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String READ_RESULT = "SELECT RESULT_ID, CUSTOMER_ID, WEIGHT, WAIST, THIGH, CHEST, HEIGHT, MEASUREMENT_DATE FROM RESULTS WHERE RESULT_ID=?";
-    private static final String UPDATE_RESULT = "UPDATE RESULTS SET WEIGHT=?, WAIST=?, THIGH=?, CHEST=?  WHERE RESULT_ID=?";
+    private static final String UPDATE_RESULT = "ConnectionPool";
     private static final String DELETE_RESULT = "DELETE FROM RESULTS WHERE RESULT_ID=?";
 
     public List<Result> findAllByUserId(int userId) throws SQLException {
@@ -24,7 +24,7 @@ public class ResultDAOImpl implements ResultDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_RESULT_BY_USER_ID);
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
@@ -48,7 +48,7 @@ public class ResultDAOImpl implements ResultDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_RESULT, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, result.getCustomerId());
             statement.setDouble(2, result.getWeight());
@@ -78,7 +78,7 @@ public class ResultDAOImpl implements ResultDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_RESULT);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -100,7 +100,7 @@ public class ResultDAOImpl implements ResultDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_RESULT);
             statement.setDouble(1, result.getWeight());
             statement.setDouble(2, result.getWaist());
@@ -121,7 +121,7 @@ public class ResultDAOImpl implements ResultDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_RESULT);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -139,7 +139,7 @@ public class ResultDAOImpl implements ResultDAO{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_RESULTS);
             while(resultSet.next()){

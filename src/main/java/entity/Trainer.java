@@ -18,6 +18,11 @@ public class Trainer {
         this.specialization = specialization;
     }
 
+    public Trainer(String firstName, String lastName){
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public int getTrainerId() {
         return trainerId;
     }
@@ -80,5 +85,16 @@ public class Trainer {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (specialization != null ? specialization.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Trainer{" +
+                "trainerId=" + trainerId +
+                ", userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", specialization='" + specialization + '\'' +
+                '}';
     }
 }

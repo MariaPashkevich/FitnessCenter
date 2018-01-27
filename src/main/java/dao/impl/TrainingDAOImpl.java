@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.TrainerDAO;
 import dao.TrainingDAO;
 import entity.Training;
@@ -24,7 +24,7 @@ public class TrainingDAOImpl implements TrainingDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_TRAINING, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, training.getCustomerId());
             statement.setInt(2, training.getExerciseId());
@@ -53,7 +53,7 @@ public class TrainingDAOImpl implements TrainingDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_TRAINING);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -75,7 +75,7 @@ public class TrainingDAOImpl implements TrainingDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_TRAINING);
             statement.setInt(1, training.getExerciseId());
             statement.setInt(2, training.getNumber());
@@ -96,7 +96,7 @@ public class TrainingDAOImpl implements TrainingDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_TRAINING);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -114,7 +114,7 @@ public class TrainingDAOImpl implements TrainingDAO{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_TRAININGS);
             while (resultSet.next()){
@@ -136,7 +136,7 @@ public class TrainingDAOImpl implements TrainingDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try{
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_ALL_TRAININGS_BY_CUSTOMER_ID);
             statement.setInt(1, customerId);
             ResultSet resultSet = statement.executeQuery();

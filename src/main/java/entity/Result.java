@@ -133,4 +133,18 @@ public class Result {
         result = 31 * result + (measurementDate != null ? measurementDate.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "resultId=" + resultId +
+                ", customerId=" + customerId +
+                ", weight=" + weight +
+                ", waist=" + waist +
+                ", thigh=" + thigh +
+                ", chest=" + chest +
+                ", height=" + height +
+                ", measurementDate=" + measurementDate +
+                '}';
+    }
 }

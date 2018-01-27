@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.MealDAO;
 import entity.Meal;
 
@@ -14,31 +14,32 @@ public class MealDAOImpl implements MealDAO{
 
     private static final String FIND_ALL_MEALS = "SELECT MEAL_ID, CUSTOMER_ID, RECIPE_ID, TYPE, MEAL_DATE FROM MEAL";
     private static final String FIND_ALL_BY_CUSTOMER_ID = "SELECT MEAL_ID, CUSTOMER_ID, RECIPE_ID, TYPE, MEAL_DATE FROM MEAL WHERE CUSTOMER_ID=?";
-    private static final String CREATE_MEAL = "INSERT INTO `MEAL` (`CUSTOMER_ID`, `RECIPE_ID`, `TYPE`, `MEAL_DATE`) VALUES (?, ?, ?, ?)";
+    private static final String CREATE_MEAL = "INSERT INTO `MEAL` (`CUSTOMER_ID`, `RECIPE_ID`, `TYPE`) VALUES (?, ?, ?)";
     private static final String READ_MEAL = "SELECT MEAL_ID, CUSTOMER_ID, RECIPE_ID, `TYPE`, MEAL_DATE FROM MEAL WHERE MEAL_ID=?";
-    private static final String UPDATE_MEAL = "UPDATE MEAL SET RECIPE_ID=?, `TYPE`=? MEAL_DATE=? WHERE MEAL_ID=?";
+    private static final String UPDATE_MEAL = "UPDATE MEAL SET RECIPE_ID=? WHERE MEAL_ID=?";
     private static final String DELETE_MEAL = "DELETE FROM MEAL WHERE MEAL_ID=?";
 
     public Meal create(Meal meal) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_MEAL, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, (int) meal.getCustomerId());
             statement.setInt(2, (int) meal.getRecipeId());
             statement.setString(3, String.valueOf(meal.getType()));
-            statement.setDate(4, (Date) meal.getMealDate());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if(resultSet.next()){
-                meal.setCustomerId(resultSet.getInt(1));
+                meal.setMealId(resultSet.getInt(1));
             }
             resultSet.close();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            connection.close();
         }
         return meal;
     }
@@ -48,7 +49,7 @@ public class MealDAOImpl implements MealDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_MEAL);
             statement.setInt(1, id);
             statement.executeQuery();
@@ -68,16 +69,14 @@ public class MealDAOImpl implements MealDAO{
     }
 
     public void update(Meal meal) throws SQLException {
-        Connection connection = null;
         PreparedStatement statement = null;
+        Connection connection = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_MEAL);
-            statement.setInt(1, (int) meal.getCustomerId());
-            statement.setString(2, String.valueOf(meal.getType()));
-            statement.setDate(3, (Date) meal.getMealDate());
-            statement.setInt(4, (int) meal.getMealId());
-            statement.executeQuery();
+            statement.setInt(1, (int) meal.getRecipeId());
+            statement.setInt(2, (int) meal.getMealId());
+            statement.executeUpdate();
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -91,7 +90,7 @@ public class MealDAOImpl implements MealDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_MEAL);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -109,7 +108,7 @@ public class MealDAOImpl implements MealDAO{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_MEALS);
             while(resultSet.next()){
@@ -131,7 +130,7 @@ public class MealDAOImpl implements MealDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_ALL_BY_CUSTOMER_ID);
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();

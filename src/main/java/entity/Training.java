@@ -113,4 +113,17 @@ public class Training {
         result = 31 * result + (status ? 1 : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Training{" +
+                "trainingId=" + trainingId +
+                ", customerId=" + customerId +
+                ", exerciseId=" + exerciseId +
+                ", number=" + number +
+                ", weight=" + weight +
+                ", trainingDate=" + trainingDate +
+                ", status=" + status +
+                '}';
+    }
 }

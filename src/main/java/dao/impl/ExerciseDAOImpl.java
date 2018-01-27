@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.ExerciseDAO;
 import entity.Exercise;
 
@@ -23,7 +23,7 @@ public class ExerciseDAOImpl implements ExerciseDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_EXERCISE, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, exercise.getName());
             statement.setString(2, exercise.getDescription());
@@ -52,7 +52,7 @@ public class ExerciseDAOImpl implements ExerciseDAO{
         PreparedStatement statement = null;
         Exercise exercise = new Exercise();
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_EXERCISE);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -72,7 +72,7 @@ public class ExerciseDAOImpl implements ExerciseDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_EXERCISE);
             statement.setString(1, exercise.getName());
             statement.setString(2, exercise.getDescription());
@@ -92,7 +92,7 @@ public class ExerciseDAOImpl implements ExerciseDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_EXERCISE);
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -110,7 +110,7 @@ public class ExerciseDAOImpl implements ExerciseDAO{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_EXERCISES);
             while(resultSet.next()){
@@ -121,9 +121,8 @@ public class ExerciseDAOImpl implements ExerciseDAO{
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
+        
         return exerciseList;
     }
 
@@ -132,7 +131,7 @@ public class ExerciseDAOImpl implements ExerciseDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_BY_NAME);
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();

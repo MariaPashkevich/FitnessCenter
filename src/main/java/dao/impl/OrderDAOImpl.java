@@ -1,6 +1,6 @@
 package dao.impl;
 
-import connection.DataSource;
+import connection.ConnectionPool;
 import dao.OrderDAO;
 import entity.Order;
 
@@ -24,7 +24,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(CREATE_ORDER, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, (int) order.getCustomerId());
             statement.setInt(2, (int) order.getTrainerId());
@@ -51,7 +51,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(READ_ORDER);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -74,7 +74,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(UPDATE_ORDER);
             statement.setInt(1, (int) order.getTrainerId());
             statement.setInt(2, order.getTrainingNumber());
@@ -94,7 +94,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(DELETE_ORDER);
             statement.setInt(1, id);
             statement.executeQuery();
@@ -112,7 +112,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(FIND_ALL_ORDERS);
             while (resultSet.next()){
@@ -123,6 +123,8 @@ public class OrderDAOImpl implements OrderDAO{
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            connection.close();
         }
         return orderList;
     }
@@ -132,7 +134,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_ALL_BY_CUSTOMER_ID);
             statement.setInt(1, customerId);
             ResultSet resultSet = statement.executeQuery();
@@ -158,7 +160,7 @@ public class OrderDAOImpl implements OrderDAO{
         Connection connection = null;
         PreparedStatement statement = null;
         try {
-            connection = DataSource.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             statement = connection.prepareStatement(FIND_ALL_BY_TRAINER_ID);
             statement.setInt(1, trainerId);
             ResultSet resultSet = statement.executeQuery();
